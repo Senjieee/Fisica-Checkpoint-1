@@ -1,4 +1,4 @@
- //Johnny Geng
+//Johnny Geng
 //1-2
 //Dec 22
 //Fisica
@@ -14,7 +14,23 @@ color yellow = color(242, 215, 16);
 PImage redBird;
 //fisica
 FWorld world;
+
+boolean mouseReleased;
+boolean wasPressed;
+
+boolean gravity, fBodies;
+
+Cloud cloud1, cloud2;
+Button gravityB, fBodiesB;
 void setup() {
+  fBodies = true;
+  gravity = true;
+  
+  cloud1 = new Cloud(200);
+  cloud2 = new Cloud(800);
+  
+  gravityB = new Button("gravity", width - 200, height/2 - 100, 140, 100, red, 255);
+  fBodiesB = new Button("fBodies", width - 200, height/2 + 100, 140, 100, red, 255);
   //make window
   fullScreen();
   
@@ -70,16 +86,41 @@ void makeBottomPlatform() {
 
 //=====================================================================================================================================
 void draw() {
+  click();
   println("x: " + mouseX + " y: " + mouseY);
   background(blue);
   if (frameCount % 20 == 0) {  //Every 20 frames ...
-    makeCircle();
-    makeBlob();
-    makeBox();
-    makeBird();
+    if (fBodies ==  true) {
+      makeCircle();
+      makeBlob();
+      makeBox();
+      makeBird();
+    }
   }
+  cloud2.show();
   world.step();  //get box2D to calculate all the forces and new positions
   world.draw();  //ask box2D to convert this world to processing screen coordinates and draw
+  cloud1.show();
+  gravityB.show();
+  fBodiesB.show();
+  
+  if (fBodiesB.clicked) {
+    if (fBodies == true) {
+      fBodies = false;
+    } else if (fBodies == false) {
+      fBodies = true;
+    }
+  }
+  
+  if (gravityB.clicked) {
+    if (gravity == true) {
+      gravity = false;
+      world.setGravity(0, 0);
+    } else if (gravity == false) {
+      gravity = true;
+      world.setGravity(0, 900);
+    }
+  }
 }
 
 //=====================================================================================================================================
